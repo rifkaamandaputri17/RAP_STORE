@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pesanan - Premium Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      color: #fbbd08;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .pesanan {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .pesanan:last-child {
+      border-bottom: none;
+    }
+
+    .pesanan h3 {
+      margin: 0 0 5px;
+    }
+
+    .pesanan p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .kosong {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>Premium Store</h1>
+  <a href="web part2.html">Kembali</a>
+</div>
+
+<div class="container">
+  <h2>Daftar Pesanan</h2>
+  <div id="daftarPesanan" class="pesanan-list"></div>
+</div>
+
+<script>
+  const daftarPesanan = document.getElementById('daftarPesanan');
+  const pesananData = JSON.parse(localStorage.getItem('pesananList')) || [];
+
+  if (pesananData.length === 0) {
+    daftarPesanan.innerHTML = '<div class="kosong">Belum ada pesanan masuk.</div>';
+  } else {
+    pesananData.forEach((pesanan, index) => {
+      const el = document.createElement('div');
+      el.className = 'pesanan';
+      el.innerHTML = `
+        <h3>Pesanan #${index + 1}</h3>
+        <p>Nama Pelanggan: ${pesanan.nama}</p>
+        <p>Produk: ${pesanan.produk}</p>
+        <p>Jumlah: ${pesanan.jumlah}</p>
+        <p>Catatan: ${pesanan.catatan || '-'}</p>
+      `;
+      daftarPesanan.appendChild(el);
+    });
+  }
+</script>
+
+</body>
+</html>

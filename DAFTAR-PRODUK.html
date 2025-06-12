@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daftar Produk - Premium Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      color: #fbbd08;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .produk {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .produk:last-child {
+      border-bottom: none;
+    }
+
+    .produk h3 {
+      margin: 0 0 5px;
+    }
+
+    .produk p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .kosong {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+    }
+
+    .tombol {
+      margin-top: 10px;
+      background: #fbbd08;
+      color: #000;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .tombol:hover {
+      background: #f4b400;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>Premium Store</h1>
+  <a href="web part2.html">Kembali</a>
+</div>
+
+<div class="container">
+  <h2>Daftar Produk</h2>
+  <div id="daftarProduk" class="produk-list"></div>
+</div>
+
+<script>
+  const daftarProduk = document.getElementById('daftarProduk');
+  const produkData = JSON.parse(localStorage.getItem('produkList')) || [];
+
+  if (produkData.length === 0) {
+    daftarProduk.innerHTML = '<div class="kosong">Belum ada produk ditambahkan.</div>';
+  } else {
+    produkData.forEach((produk, index) => {
+      const el = document.createElement('div');
+      el.className = 'produk';
+      el.innerHTML = `
+        <h3>${produk.nama}</h3>
+        <p>Harga: Rp ${parseInt(produk.harga).toLocaleString()}</p>
+        <p>${produk.deskripsi}</p>
+        <button class="tombol" onclick="tambahKeKeranjang(${index})">Tambah ke Keranjang</button>
+      `;
+      daftarProduk.appendChild(el);
+    });
+  }
+
+  function tambahKeKeranjang(index) {
+    const produk = produkData[index];
+    const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+
+    // Cek apakah produk sudah ada di keranjang
+    const existing = keranjang.find(item => item.nama === produk.nama);
+    if (existing) {
+      existing.jumlah += 1;
+    } else {
+      keranjang.push({
+        nama: produk.nama,
+        harga: parseInt(produk.harga),
+        jumlah: 1
+      });
+    }
+
+    localStorage.setItem('keranjang', JSON.stringify(keranjang));
+    alert(`Produk "${produk.nama}" ditambahkan ke keranjang.`);
+  }
+</script>
+
+</body>
+</html>

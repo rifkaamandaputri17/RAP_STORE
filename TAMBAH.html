@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tambah Produk - Premium Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      color: #fbbd08;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background: #fbbd08;
+      border: none;
+      color: #000;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #f4b400;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e0ffe0;
+      border: 1px solid #b2ffb2;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>Premium Store</h1>
+  <a href="web part2.html">Kembali</a>
+</div>
+
+<div class="container">
+  <h2>Tambah Produk</h2>
+  <form id="productForm">
+    <label for="nama">Nama Produk</label>
+    <input type="text" id="nama" required>
+
+    <label for="harga">Harga (Rp)</label>
+    <input type="number" id="harga" required>
+
+    <label for="deskripsi">Deskripsi</label>
+    <textarea id="deskripsi" rows="4" required></textarea>
+
+    <button type="submit">Simpan Produk</button>
+  </form>
+
+  <div class="result" id="hasil" style="display: none;"></div>
+</div>
+
+<script>
+ form.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const nama = document.getElementById('nama').value;
+  const harga = document.getElementById('harga').value;
+  const deskripsi = document.getElementById('deskripsi').value;
+
+  // Ambil data produk yang sudah ada
+  const produkList = JSON.parse(localStorage.getItem('produkList')) || [];
+
+  // Tambahkan produk baru ke array
+  produkList.push({ nama, harga, deskripsi });
+
+  // Simpan kembali ke localStorage
+  localStorage.setItem('produkList', JSON.stringify(produkList));
+
+  hasil.style.display = 'block';
+  hasil.innerHTML = `
+    <strong>Produk berhasil ditambahkan:</strong><br>
+    Nama: ${nama}<br>
+    Harga: Rp ${parseInt(harga).toLocaleString()}<br>
+    Deskripsi: ${deskripsi}
+  `;
+
+  form.reset();
+});
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard Pedagang</title></head>
+<body>
+  <h1>Selamat datang, Pedagang!</h1>
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== "pedagang") {
+      alert("Akses ditolak.");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

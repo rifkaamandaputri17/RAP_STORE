@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profil Toko - Premium Store</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    .navbar {
+      background: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      color: #fbbd08;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #444;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      background: #fbbd08;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #f4b400;
+    }
+
+    .info-simpan {
+      color: green;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>Premium Store</h1>
+  <a href="web part2.html">Kembali</a>
+</div>
+
+<div class="container">
+  <h2>Profil Toko</h2>
+  <form id="formProfil">
+    <label for="namaToko">Nama Toko</label>
+    <input type="text" id="namaToko" required>
+
+    <label for="alamatToko">Alamat</label>
+    <textarea id="alamatToko" rows="3" required></textarea>
+
+    <label for="kontakToko">Kontak</label>
+    <input type="text" id="kontakToko" required>
+
+    <button type="submit">Simpan</button>
+    <div id="infoSimpan" class="info-simpan"></div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('formProfil');
+  const namaToko = document.getElementById('namaToko');
+  const alamatToko = document.getElementById('alamatToko');
+  const kontakToko = document.getElementById('kontakToko');
+  const infoSimpan = document.getElementById('infoSimpan');
+
+  // Ambil data dari localStorage jika ada
+  const profil = JSON.parse(localStorage.getItem('profilToko'));
+  if (profil) {
+    namaToko.value = profil.nama;
+    alamatToko.value = profil.alamat;
+    kontakToko.value = profil.kontak;
+  }
+
+  // Simpan data saat form disubmit
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const data = {
+      nama: namaToko.value,
+      alamat: alamatToko.value,
+      kontak: kontakToko.value
+    };
+    localStorage.setItem('profilToko', JSON.stringify(data));
+    infoSimpan.textContent = "Profil toko berhasil disimpan!";
+  });
+</script>
+
+</body>
+</html>

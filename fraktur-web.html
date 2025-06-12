@@ -1,0 +1,127 @@
+<?php
+session_start();
+
+// Tambah ke keranjang jika form dikirim
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nama = $_POST['nama'] ?? '';
+    $jumlah = (int)($_POST['jumlah'] ?? 0);
+    $harga = (int)($_POST['harga'] ?? 0);
+
+    if ($nama && $jumlah > 0 && $harga > 0) {
+        $_SESSION['keranjang'][] = [
+            'nama' => htmlspecialchars($nama),
+            'jumlah' => $jumlah,
+            'harga' => $harga
+        ];
+    }
+}
+
+// Hapus keranjang (opsional)
+if (isset($_GET['clear'])) {
+    unset($_SESSION['keranjang']);
+    header("Location: faktur.php");
+    exit;
+}
+
+$keranjang = $_SESSION['keranjang'] ?? [];
+$total = 0;
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faktur Penjualan - Premium Store</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; padding: 30px; }
+    .faktur { max-width: 700px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h1, h2 { text-align: center; color: #fbbd08; }
+    .form-input { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
+    input[type="text"], input[type="number"] {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+    }
+    .btn {
+      display: inline-block; margin: 10px 5px; background: #fbbd08; color: #000;
+      padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+      text-decoration: none;
+    }
+    .btn:hover { background: #f4b400; }
+    .footer { margin-top: 30px; text-align: center; font-size: 14px; color: #888; }
+  </style>
+</head>
+<body>
+
+<div class="faktur">
+  <h1>Premium Store</h1>
+  <h2>Tambah Produk ke Keranjang</h2>
+
+  <form method="POST" class="form">
+    <div class="form-input">
+      <label for="nama">Nama Produk</label>
+      <input type="text" name="nama" required>
+    </div>
+    <div class="form-input">
+      <label for="jumlah">Jumlah</label>
+      <input type="number" name="jumlah" min="1" required>
+    </div>
+    <div class="form-input">
+      <label for="harga">Harga (per item)</label>
+      <input type="number" name="harga" min="1" required>
+    </div>
+    <button class="btn" type="submit">Tambah ke Keranjang</button>
+    <a class="btn" href="?clear=1" onclick="return confirm('Hapus semua item?')">Hapus Keranjang</a>
+  </form>
+
+  <hr>
+
+  <h2>Faktur Penjualan</h2>
+
+  <div class="detail">
+    <?php if (empty($keranjang)): ?>
+      <p>Keranjang kosong. Silakan tambahkan produk.</p>
+    <?php else: ?>
+      <?php foreach ($keranjang as $i => $item): 
+        $subtotal = $item['jumlah'] * $item['harga'];
+        $total += $subtotal;
+      ?>
+        <p><strong>Produk <?= $i + 1 ?>:</strong> <?= $item['nama'] ?></p>
+        <p>Jumlah: <?= $item['jumlah'] ?></p>
+        <p>Harga Satuan: Rp <?= number_format($item['harga'], 0, ',', '.') ?></p>
+        <p>Subtotal: Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+        <hr/>
+      <?php endforeach; ?>
+
+      <p><strong>Total Bayar:</strong> Rp <?= number_format($total, 0, ',', '.') ?></p>
+      <p><strong>Tanggal:</strong> <?= date('d-m-Y') ?></p>
+    <?php endif; ?>
+  </div>
+
+  <?php if (!empty($keranjang)): ?>
+    <?php
+      $pesan = "🛒 *Pesanan Premium Store:*\n";
+      foreach ($keranjang as $i => $item) {
+        $sub = $item['jumlah'] * $item['harga'];
+        $pesan .= "\n" . ($i + 1) . ". " . $item['nama'] .
+                  "\nJumlah: " . $item['jumlah'] .
+                  "\nHarga: Rp " . number_format($item['harga'], 0, ',', '.') .
+                  "\nSubtotal: Rp " . number_format($sub, 0, ',', '.') . "\n";
+      }
+      $pesan .= "\n💰 *Total Bayar:* Rp " . number_format($total, 0, ',', '.');
+      $pesan .= "\n📅 Tanggal: " . date('d-m-Y');
+
+      $noWhatsApp = "6281234567890"; // Ganti dengan nomormu
+      $linkWa = "https://wa.me/$noWhatsApp?text=" . urlencode($pesan);
+    ?>
+    <button class="btn" onclick="window.print()">Cetak Faktur</button>
+    <a class="btn" href="<?= $linkWa ?>" target="_blank">Kirim via WhatsApp</a>
+  <?php endif; ?>
+
+  <div class="footer">
+    Terima kasih telah berbelanja di Premium Store
+  </div>
+</div>
+
+</body>
+</html>
